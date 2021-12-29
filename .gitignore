@@ -1,0 +1,9 @@
+data
+pretrained_model
+**/.ipynb_checkpoints
+**/.vscode
+cs231n/datasets/coco_captioning
+cs231n/datasets/MNIST_data
+cs231n/datasets/imagenet_val_25.npz
+**/__pycache__
+
