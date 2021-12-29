@@ -21,9 +21,11 @@ NOTEBOOKS=(
 )
 PDFS=(
 	"RNN_Captioning.ipynb"
-  "Transformer_Captioning.ipynb"
+	"Transformer_Captioning.ipynb"
 	"Network_Visualization.ipynb"
 	"Generative_Adversarial_Networks.ipynb"
+	"Self_Supervised_Learning.ipynb"
+	"LSTM_Captioning.ipynb"
 )
 
 FILES=( "${CODE[@]}" "${NOTEBOOKS[@]}" )
