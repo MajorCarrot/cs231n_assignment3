@@ -233,12 +233,13 @@ class CaptioningRNN:
 
         captions[:, 0] = self._start
         hi, _ = affine_forward(features, W_proj, b_proj)
+        ci = np.zeros_like(hi)
 
         for i in range(1, max_length):
           if self.cell_type == 'rnn':
             hi, _ = rnn_step_forward(np.squeeze(W_embed[captions[:, i-1]]), hi, Wx, Wh, b)
           else:
-            hi, _, _ = lstm_step_forward(np.squeeze(W_embed[captions[:, i-1]]), hi, 0, Wx, Wh, b)
+            hi, ci, _ = lstm_step_forward(np.squeeze(W_embed[captions[:, i-1]]), hi, ci, Wx, Wh, b)
           score, _ = affine_forward(hi, W_vocab, b_vocab)
           captions[:, i] = np.argmax(score, axis=1)
 

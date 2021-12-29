@@ -75,8 +75,8 @@ class PositionalEncoding(nn.Module):
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        N, S, D = x.shape
-        output = self.dropout(x + self.pe[:, :S, :D])
+        output = x + self.pe[:, :S, :]
+        output = self.dropout(output)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
@@ -134,7 +134,6 @@ class MultiHeadAttention(nn.Module):
 
         self.softmax = nn.Softmax(dim=-1)
         self.dropout = nn.Dropout(p=dropout)
-        self.linear_transform = nn.Linear(embed_dim, embed_dim)
         self.embed_dim = embed_dim
         self.num_heads = num_heads
 
@@ -198,15 +197,15 @@ class MultiHeadAttention(nn.Module):
         # Calculate the attention weights
         attn_scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(head_dim)
         if attn_mask is not None:
-          attn_scores = attn_scores.masked_fill(attn_mask == 0, -1e9)
+          attn_scores = attn_scores.masked_fill(attn_mask == 0, -float("inf"))
         attn_scores = self.softmax(attn_scores)
         output = self.dropout(attn_scores)
 
         # Apply the attention weights to the value
         output = torch.matmul(output, value)
 
-        output = output.transpose(1, 2).contiguous().reshape(N, -1, D)
-        output = self.linear_transform(output)
+        output = output.transpose(1, 2).contiguous().view(N, -1, D)
+        output = self.proj(output)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
